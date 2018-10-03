@@ -3,12 +3,20 @@ package com.ieli.ww.model.product.costs;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ieli.ww.model.product.Product;
 
 @Entity
 @Table(name = "cost_details")
@@ -17,17 +25,12 @@ public class CostDetails implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long costDetailsId;
-	private Double rrp;
-	private String currency;
-	private Double extraCost;
 	private String month;
 	private String extraCostDescription;
-	private Double sellingPrice;
-	private Double actuallySold;
-	private Double profit;
-	private Double profitPercentage;
 	private boolean enabled;
 	private Long productId;
+	private Product product;
+	private List<CostDetailsCurrency> costDetailsCurrencies;
 
 	public CostDetails() {
 
@@ -44,33 +47,6 @@ public class CostDetails implements Serializable {
 		this.costDetailsId = costDetailsId;
 	}
 
-	@Column(name = "rrp")
-	public Double getRrp() {
-		return rrp;
-	}
-
-	public void setRrp(Double rrp) {
-		this.rrp = rrp;
-	}
-
-	@Column(name = "currency")
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	@Column(name = "extra_cost")
-	public Double getExtraCost() {
-		return extraCost;
-	}
-
-	public void setExtraCost(Double extraCost) {
-		this.extraCost = extraCost;
-	}
-
 	@Column(name = "extra_cost_description")
 	public String getExtraCostDescription() {
 		return extraCostDescription;
@@ -78,42 +54,6 @@ public class CostDetails implements Serializable {
 
 	public void setExtraCostDescription(String extraCostDescription) {
 		this.extraCostDescription = extraCostDescription;
-	}
-
-	@Column(name = "selling_price")
-	public Double getSellingPrice() {
-		return sellingPrice;
-	}
-
-	public void setSellingPrice(Double sellingPrice) {
-		this.sellingPrice = sellingPrice;
-	}
-
-	@Column(name = "actually_sold")
-	public Double getActuallySold() {
-		return actuallySold;
-	}
-
-	public void setActuallySold(Double actuallySold) {
-		this.actuallySold = actuallySold;
-	}
-
-	@Column(name = "profit")
-	public Double getProfit() {
-		return profit;
-	}
-
-	public void setProfit(Double profit) {
-		this.profit = profit;
-	}
-
-	@Column(name = "profit_percentage")
-	public Double getProfitPercentage() {
-		return profitPercentage;
-	}
-
-	public void setProfitPercentage(Double profitPercentage) {
-		this.profitPercentage = profitPercentage;
 	}
 
 	@Column(name = "enabled", nullable = false)
@@ -141,6 +81,26 @@ public class CostDetails implements Serializable {
 
 	public void setProductId(Long productId) {
 		this.productId = productId;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	@JsonBackReference
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	@Transient
+	public List<CostDetailsCurrency> getCostDetailsCurrencies() {
+		return costDetailsCurrencies;
+	}
+
+	public void setCostDetailsCurrencies(List<CostDetailsCurrency> costDetailsCurrencies) {
+		this.costDetailsCurrencies = costDetailsCurrencies;
 	}
 
 }

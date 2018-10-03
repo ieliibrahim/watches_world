@@ -6,10 +6,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ieli.ww.model.product.costs.CostDetails;
 import com.ieli.ww.model.product.details.CountryDetails;
 import com.ieli.ww.model.product.details.ProductDetails;
@@ -146,6 +150,8 @@ public class Product implements Serializable {
 		this.enabled = enabled;
 	}
 
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
+	@JsonManagedReference
 	public ProductDetails getProductDetails() {
 		return productDetails;
 	}
@@ -154,6 +160,7 @@ public class Product implements Serializable {
 		this.productDetails = productDetails;
 	}
 
+	@Transient
 	public Client getClient() {
 		return client;
 	}
@@ -162,6 +169,7 @@ public class Product implements Serializable {
 		this.client = client;
 	}
 
+	@Transient
 	public Supplier getSupplier() {
 		return supplier;
 	}
@@ -170,6 +178,8 @@ public class Product implements Serializable {
 		this.supplier = supplier;
 	}
 
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
+	@JsonManagedReference
 	public CostDetails getCostDetails() {
 		return costDetails;
 	}
@@ -178,6 +188,7 @@ public class Product implements Serializable {
 		this.costDetails = costDetails;
 	}
 
+	@Transient
 	public CountryDetails getCountryDetails() {
 		return countryDetails;
 	}

@@ -1,9 +1,9 @@
 package com.ieli.ww.repository.product;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +19,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("update Product prod set prod.enabled = ?1")
 	void toggleProductEnabled(Boolean enabled);
 
-	Page<Product> findAllByEnabled(Pageable pageable, Boolean enabled);
+	List<Product> findAllByEnabled(boolean enabled);
 }

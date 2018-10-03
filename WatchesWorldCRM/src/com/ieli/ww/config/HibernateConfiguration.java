@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan({ "com.ieli.ww" })
-@EnableJpaRepositories({ "com.ieli.ww.repository" })
+@EnableJpaRepositories(basePackages = { "com.ieli.ww.repository" })
 @PropertySource({ "classpath:application.properties" })
 public class HibernateConfiguration {
 	@Autowired

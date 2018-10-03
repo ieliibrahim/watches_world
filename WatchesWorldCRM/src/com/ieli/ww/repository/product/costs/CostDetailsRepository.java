@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import com.ieli.ww.model.product.costs.CostDetails;
 
-@Repository("costsRepository")
+@Repository("costDetailsRepository")
 @Transactional
-public interface CostsRepository extends JpaRepository<CostDetails, Long> {
+public interface CostDetailsRepository extends JpaRepository<CostDetails, Long> {
 
-	List<CostDetails> getCostDetailsByCurrencyAndMonthAndEnabled(String currency, String month, Boolean enabled);
+	List<CostDetails> getCostDetailsByMonthAndEnabled(String month, Boolean enabled);
 
 }

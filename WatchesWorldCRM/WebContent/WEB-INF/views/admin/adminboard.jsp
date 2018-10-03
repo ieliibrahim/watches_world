@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 
@@ -48,6 +48,28 @@
 <!-- Custom Theme Style -->
 <link href="../resources/css/app/custom.min.css" rel="stylesheet">
 
+<!-- Datatables -->
+<link
+	href="../resources/vendors/bootstrap-daterangepicker/daterangepicker.css"
+	rel="stylesheet">
+
+<link
+	href="../resources/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="../resources/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="../resources/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="../resources/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="../resources/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css"
+	rel="stylesheet">
+
+
 </head>
 
 <body class="nav-md">
@@ -71,7 +93,8 @@
 					<!-- menu profile quick info -->
 					<div class="profile clearfix">
 						<div class="profile_pic">
-							<img src="${user.photo }" alt="..."
+							<img src="${user.photo }"
+								alt="${user.name }&nbsp;${user.surname }"
 								class="img-circle profile_img">
 						</div>
 						<div class="profile_info">
@@ -138,7 +161,7 @@
 						<ul class="nav navbar-nav navbar-right">
 							<li class=""><a href="javascript:;"
 								class="user-profile dropdown-toggle" data-toggle="dropdown"
-								aria-expanded="false"> <img src="${user.photo }" alt="">J${user.name }&nbsp;${user.surname }
+								aria-expanded="false"> <img src="${user.photo }" alt="">${user.name }&nbsp;${user.surname }
 									<span class=" fa fa-angle-down"></span>
 							</a>
 								<ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -169,25 +192,55 @@
 
 					<div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
 						<span class="count_top"><i class="fa fa-female"></i> Total
-							Sold - Female </span>
-						<div class="count">${soldFemale}</div>
+							Sold - ${month}</span>
+						<div class="count">${soldFemale}-Female</div>
 						<span class="count_bottom"> ${soldFemalePerc}% </span>
 					</div>
 
 					<div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
 						<span class="count_top"><i class="fa fa-male"></i> Total
-							Sold - Male </span>
-						<div class="count">${soldMale}</div>
+							Sold - ${month} </span>
+						<div class="count">${soldMale}-Male</div>
 						<span class="count_bottom"> ${soldMalePerc}% </span>
 					</div>
 
 
 				</div>
 
+
+				<!-- ------------------------------------------ End Totals Tiles --------------------------------------------- -->
+
+				<!-- ------------------------------------------ Products Table --------------------------------------------- -->
+
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+
+						<table id="products_table_id"
+							class="table table-striped table-bordered dt-responsive nowrap"
+							cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th data-field="productId">INTERNAL REFERENCE</th>
+									<th data-field="brand">BRAND</th>
+									<th data-field="model">MODEL</th>
+									<th data-field="productReference">REFERENCE</th>
+									<th data-field="productCase">CASE</th>
+									<th data-field="bracelet">BRACELET</th>
+									<th data-field="dial">DIAL</th>
+									<th data-field="year">YEAR</th>
+									<th data-field="condition">CONDITION</th>
+									<th data-field="serial">SERIAL</th>
+									<th data-field="serial">BOX</th>
+									<th data-field="serial">PAPERS</th>
+									<th data-field="serial">AVAILABILITY STATUS</th>
+
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
 			</div>
-
-
-			<!-- ------------------------------------------ End Totals Tiles --------------------------------------------- -->
+			<!-- ------------------------------------------ End Products Table --------------------------------------------- -->
 
 		</div>
 
@@ -235,7 +288,93 @@
 	<script
 		src="../resources/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
+	<script
+		src="../resources/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+	<script
+		src="../resources/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+	<script src="../resources/vendors/jszip/dist/jszip.min.js"></script>
+	<script src="../resources/vendors/pdfmake/build/pdfmake.min.js"></script>
+	<script src="../resources/vendors/pdfmake/build/vfs_fonts.js"></script>
+
 	<!-- Custom Theme Scripts -->
 	<script src="../resources/js/app/custom.min.js"></script>
+
+	<!-- Data tables -->
+
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+
+							// Activated the table
+							var tableClient = $('#products_table_id')
+									.DataTable(
+											{
+												"columnDefs" : [ {
+													"targets" : [10,11, 12],
+													"render" : function(data, type, row) {
+														if (data === true) {
+															return 'YES';
+														} else {
+															return 'NO'
+														}
+													}
+												} ],
+												"autoWidth" : false,
+												"ajax" : {
+													"url" : "${pageContext.servletContext.contextPath}/admin/getAllProducts",
+													"type" : "GET",
+													"success" : function(data) {
+														$
+																.each(
+																		data,
+																		function(
+																				ind,
+																				obj) {
+
+																			tableClient.row
+																					.add(
+																							[
+																									obj.productId,
+																									obj.brand,
+																									obj.model,
+																									obj.productReference,
+																									obj.productDetails.productCase,
+																									obj.productDetails.bracelet,
+																									obj.productDetails.dial,
+																									obj.year,
+																									obj.productDetails.condition,
+																									obj.serial,
+																									obj.productDetails.hasBox,
+																									obj.productDetails.hasPapers,
+																									obj.productDetails.availabilityStatus
+
+																							])
+																					.draw();
+																		});
+													}
+												},
+											});
+						});
+	</script>
+
 </body>
 </html>

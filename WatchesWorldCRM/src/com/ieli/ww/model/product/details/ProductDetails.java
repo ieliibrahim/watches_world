@@ -6,9 +6,15 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ieli.ww.model.product.Product;
 
 @Entity
 @Table(name = "product_details")
@@ -26,7 +32,7 @@ public class ProductDetails implements Serializable {
 	private String paymentStatus;
 	private Boolean availabilityStatus;
 	private boolean enabled;
-	private Long productId;
+	private Product product;
 
 	public ProductDetails() {
 
@@ -124,13 +130,15 @@ public class ProductDetails implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@Column(name = "product_id", nullable = false)
-	public Long getProductId() {
-		return productId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	@JsonBackReference
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 }

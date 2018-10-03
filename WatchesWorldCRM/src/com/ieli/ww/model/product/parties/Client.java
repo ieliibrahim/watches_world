@@ -21,6 +21,8 @@ public class Client implements Serializable {
 	private Integer age;
 	private String gender;
 	private String phone;
+	private String dateSold;
+	private String month;
 	private boolean enabled;
 	private Long productId;
 
@@ -73,6 +75,24 @@ public class Client implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	@Column(name = "date_sold")
+	public String getDateSold() {
+		return dateSold;
+	}
+
+	public void setDateSold(String dateSold) {
+		this.dateSold = dateSold;
+	}
+
+	@Column(name = "month")
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 	@Column(name = "enabled", nullable = false)

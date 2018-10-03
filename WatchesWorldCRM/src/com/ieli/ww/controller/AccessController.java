@@ -40,7 +40,7 @@ public class AccessController {
 		if (isCurrentAuthenticationAnonymous()) {
 			goTo = "login";
 		} else {
-			goTo = "redirect:/adminboard";
+			goTo = "redirect:/admin/adminboard";
 		}
 
 		return goTo;

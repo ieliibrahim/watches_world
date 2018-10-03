@@ -11,6 +11,6 @@ import com.ieli.ww.model.product.parties.Client;
 @Transactional
 public interface ClientsRepository extends JpaRepository<Client, Long> {
 
-	Long countByGenderAndEnabled(String gender, Boolean enabled);
+	Long countByGenderAndMonthAndEnabled(String gender, String month, Boolean enabled);
 
 }
