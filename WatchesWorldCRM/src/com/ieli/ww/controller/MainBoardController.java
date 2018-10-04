@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.ieli.ww.model.datatables.DataTableRequest;
 import com.ieli.ww.model.datatables.DataTableResults;
 import com.ieli.ww.model.datatables.PaginationCriteria;
@@ -84,63 +80,15 @@ public class MainBoardController {
 		return "admin/adminboard";
 	}
 
-	@RequestMapping(value = "/getProductsJSON", method = RequestMethod.GET)
-	@ResponseBody
-	public String getJsonData(HttpServletRequest request) {
-
-		int draw = Integer.valueOf(request.getParameter("draw"));
-		// Start record
-		int start = Integer.valueOf(request.getParameter("start"));
-
-		// Numberof records that the table can display
-		int length = Integer.valueOf(request.getParameter("length"));
-
-		String searchValue = request.getParameter("search[value]");
-
-		int pageNumber = (start + length) / length;
-
-		Page<Product> products = null;
-		if (searchValue != null && !searchValue.equals("")) {
-			products = productRepository.getDataTablesRecordsWithSearch(searchValue, true,
-					new PageRequest(pageNumber - 1, length));
-		} else {
-			products = productRepository.getDataTablesRecords(true, new PageRequest(pageNumber - 1, length));
-		}
-
-		JsonObject data = new JsonObject();
-		data.addProperty("draw", draw);
-		data.addProperty("recordsTotal", productRepository.countByEnabled(true));
-		data.addProperty("recordsFiltered", products.getSize());
-
-		JsonArray dataArray = new JsonArray();
-		for (Product product : products.getContent()) {
-
-			JsonObject productJson = new JsonObject();
-
-			productJson.addProperty("productId", product.getProductId());
-			productJson.addProperty("brand", product.getBrand());
-			productJson.addProperty("model", product.getModel());
-			productJson.addProperty("productReference", product.getProductReference());
-			productJson.addProperty("year", product.getYear());
-			productJson.addProperty("serial", product.getSerial());
-
-			dataArray.add(productJson);
-		}
-
-		data.add("data", dataArray);
-
-		return data.toString();
-
-	}
-
-	@RequestMapping(value = "/getProductsJSONV2", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProductsTableJSON", method = RequestMethod.GET)
 	@ResponseBody
 	public String listUsersPaginated(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		DataTableRequest<Product> dataTableInRQ = new DataTableRequest<Product>(request);
+		
 		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
 
-		String baseQuery = "SELECT	* from products, " + "(SELECT COUNT(1) FROM products) as total_records";
+		String baseQuery = "SELECT	* from products, " + "(SELECT COUNT(1) FROM products) as total_records where enabled = 1";
 
 		String paginatedQuery = DataTablesUtil.buildPaginatedQuery(baseQuery, pagination);
 
@@ -163,7 +111,8 @@ public class MainBoardController {
 			}
 		}
 
-		return new Gson().toJson(dataTableResult);
+		String result = new Gson().toJson(dataTableResult);
+		return result;
 	}
 
 	private void setupSold(Model model, String month) {

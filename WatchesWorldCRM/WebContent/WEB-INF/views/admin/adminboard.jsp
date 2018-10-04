@@ -327,7 +327,7 @@
 												"lengthMenu" : [ [ 10, 25, 50], [ 10, 25, 50 ] ],
 												
 												"ajax" : {
-													"url" : "${pageContext.servletContext.contextPath}/admin/getProductsJSONV2",
+													"url" : "${pageContext.servletContext.contextPath}/admin/getProductsTableJSON",
 													"data" : function(data) {
 														//process data before sent to server.
 													}
