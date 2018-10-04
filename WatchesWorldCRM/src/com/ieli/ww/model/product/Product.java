@@ -6,14 +6,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ieli.ww.model.product.costs.CostDetails;
 import com.ieli.ww.model.product.details.CountryDetails;
 import com.ieli.ww.model.product.details.ProductDetails;
@@ -150,8 +147,7 @@ public class Product implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
-	@JsonManagedReference
+	@Transient
 	public ProductDetails getProductDetails() {
 		return productDetails;
 	}
@@ -178,8 +174,7 @@ public class Product implements Serializable {
 		this.supplier = supplier;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
-	@JsonManagedReference
+	@Transient
 	public CostDetails getCostDetails() {
 		return costDetails;
 	}

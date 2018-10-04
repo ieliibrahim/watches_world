@@ -220,19 +220,12 @@
 							cellspacing="0" width="100%">
 							<thead>
 								<tr>
-									<th data-field="productId">INTERNAL REFERENCE</th>
-									<th data-field="brand">BRAND</th>
-									<th data-field="model">MODEL</th>
-									<th data-field="productReference">REFERENCE</th>
-									<th data-field="productCase">CASE</th>
-									<th data-field="bracelet">BRACELET</th>
-									<th data-field="dial">DIAL</th>
-									<th data-field="year">YEAR</th>
-									<th data-field="condition">CONDITION</th>
-									<th data-field="serial">SERIAL</th>
-									<th data-field="serial">BOX</th>
-									<th data-field="serial">PAPERS</th>
-									<th data-field="serial">AVAILABILITY STATUS</th>
+									<th>INTERNAL REFERENCE</th>
+									<th>BRAND</th>
+									<th>MODEL</th>
+									<th>REFERENCE</th>
+									<th>YEAR</th>
+									<th>SERIAL</th>
 
 								</tr>
 							</thead>
@@ -316,6 +309,8 @@
 
 	<!-- Custom Theme Scripts -->
 	<script src="../resources/js/app/custom.min.js"></script>
+	<script
+		src="../resources/js/datatables/jquery.dataTables.columnFilter.js"></script>
 
 	<!-- Data tables -->
 
@@ -323,56 +318,47 @@
 		$(document)
 				.ready(
 						function() {
-
-							// Activated the table
-							var tableClient = $('#products_table_id')
+							$('#products_table_id')
 									.DataTable(
 											{
-												"columnDefs" : [ {
-													"targets" : [10,11, 12],
-													"render" : function(data, type, row) {
-														if (data === true) {
-															return 'YES';
-														} else {
-															return 'NO'
-														}
-													}
-												} ],
-												"autoWidth" : false,
+												"processing" : true,
+												"serverSide" : true,
+												"pagingType" : "full_numbers",
+												"lengthMenu" : [ [ 10, 25, 50], [ 10, 25, 50 ] ],
+												
 												"ajax" : {
-													"url" : "${pageContext.servletContext.contextPath}/admin/getAllProducts",
-													"type" : "GET",
-													"success" : function(data) {
-														$
-																.each(
-																		data,
-																		function(
-																				ind,
-																				obj) {
-
-																			tableClient.row
-																					.add(
-																							[
-																									obj.productId,
-																									obj.brand,
-																									obj.model,
-																									obj.productReference,
-																									obj.productDetails.productCase,
-																									obj.productDetails.bracelet,
-																									obj.productDetails.dial,
-																									obj.year,
-																									obj.productDetails.condition,
-																									obj.serial,
-																									obj.productDetails.hasBox,
-																									obj.productDetails.hasPapers,
-																									obj.productDetails.availabilityStatus
-
-																							])
-																					.draw();
-																		});
+													"url" : "${pageContext.servletContext.contextPath}/admin/getProductsJSONV2",
+													"data" : function(data) {
+														//process data before sent to server.
 													}
 												},
+												"columns" : [
+														{
+															"data" : "productId",
+															"name" : "product_id"
+														},
+														{
+															"data" : "brand",
+															"name" : "brand"
+														},
+														{
+															"data" : "model",
+															"name" : "model"
+														},
+														{
+															"data" : "productReference",
+															"name" : "product_reference"
+														}, {
+															"data" : "year",
+															"name" : "year"
+														}, {
+															"data" : "serial",
+															"name" : "serial"
+														} ]
 											});
+
+							$('#products_table_id').dataTable()
+									.fnSetFilteringEnterPress();
 						});
 	</script>
 

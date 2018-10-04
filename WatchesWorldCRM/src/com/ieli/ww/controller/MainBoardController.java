@@ -4,10 +4,15 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.ieli.ww.model.datatables.DataTableRequest;
+import com.ieli.ww.model.datatables.DataTableResults;
+import com.ieli.ww.model.datatables.PaginationCriteria;
 import com.ieli.ww.model.product.Product;
 import com.ieli.ww.model.product.costs.CostDetails;
 import com.ieli.ww.model.product.costs.CostDetailsCurrency;
@@ -26,6 +37,7 @@ import com.ieli.ww.repository.product.clients.ClientsRepository;
 import com.ieli.ww.repository.product.costs.CostDetailsCurrencyRepository;
 import com.ieli.ww.repository.product.costs.CostDetailsRepository;
 import com.ieli.ww.repository.user.UserRepository;
+import com.ieli.ww.util.DataTablesUtil;
 import com.ieli.ww.util.StaticData;
 
 @Controller
@@ -46,6 +58,9 @@ public class MainBoardController {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@RequestMapping(value = "/adminboard", method = RequestMethod.GET)
 	public String adminboard(Pageable pageable, Model model) {
@@ -69,11 +84,86 @@ public class MainBoardController {
 		return "admin/adminboard";
 	}
 
-	@RequestMapping(value = "/getAllProducts", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProductsJSON", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Product> getAllProducts(HttpServletRequest req, HttpServletResponse resp) {
-		List<Product> products = productRepository.findAllByEnabled(true);
-		return products;
+	public String getJsonData(HttpServletRequest request) {
+
+		int draw = Integer.valueOf(request.getParameter("draw"));
+		// Start record
+		int start = Integer.valueOf(request.getParameter("start"));
+
+		// Numberof records that the table can display
+		int length = Integer.valueOf(request.getParameter("length"));
+
+		String searchValue = request.getParameter("search[value]");
+
+		int pageNumber = (start + length) / length;
+
+		Page<Product> products = null;
+		if (searchValue != null && !searchValue.equals("")) {
+			products = productRepository.getDataTablesRecordsWithSearch(searchValue, true,
+					new PageRequest(pageNumber - 1, length));
+		} else {
+			products = productRepository.getDataTablesRecords(true, new PageRequest(pageNumber - 1, length));
+		}
+
+		JsonObject data = new JsonObject();
+		data.addProperty("draw", draw);
+		data.addProperty("recordsTotal", productRepository.countByEnabled(true));
+		data.addProperty("recordsFiltered", products.getSize());
+
+		JsonArray dataArray = new JsonArray();
+		for (Product product : products.getContent()) {
+
+			JsonObject productJson = new JsonObject();
+
+			productJson.addProperty("productId", product.getProductId());
+			productJson.addProperty("brand", product.getBrand());
+			productJson.addProperty("model", product.getModel());
+			productJson.addProperty("productReference", product.getProductReference());
+			productJson.addProperty("year", product.getYear());
+			productJson.addProperty("serial", product.getSerial());
+
+			dataArray.add(productJson);
+		}
+
+		data.add("data", dataArray);
+
+		return data.toString();
+
+	}
+
+	@RequestMapping(value = "/getProductsJSONV2", method = RequestMethod.GET)
+	@ResponseBody
+	public String listUsersPaginated(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		DataTableRequest<Product> dataTableInRQ = new DataTableRequest<Product>(request);
+		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
+
+		String baseQuery = "SELECT	* from products, " + "(SELECT COUNT(1) FROM products) as total_records";
+
+		String paginatedQuery = DataTablesUtil.buildPaginatedQuery(baseQuery, pagination);
+
+		Query query = entityManager.createNativeQuery(paginatedQuery, Product.class);
+
+		@SuppressWarnings("unchecked")
+		List<Product> productsList = query.getResultList();
+
+		String totalCount = String.valueOf(productRepository.countByEnabled(true));
+		DataTableResults<Product> dataTableResult = new DataTableResults<Product>();
+		dataTableResult.setDraw(dataTableInRQ.getDraw());
+		dataTableResult.setListOfDataObjects(productsList);
+		if (!DataTablesUtil.isObjectEmpty(productsList)) {
+
+			dataTableResult.setRecordsTotal(totalCount);
+			if (dataTableInRQ.getPaginationRequest().isFilterByEmpty()) {
+				dataTableResult.setRecordsFiltered(totalCount);
+			} else {
+				dataTableResult.setRecordsFiltered(String.valueOf(productsList.size()));
+			}
+		}
+
+		return new Gson().toJson(dataTableResult);
 	}
 
 	private void setupSold(Model model, String month) {
