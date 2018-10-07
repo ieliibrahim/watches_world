@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 
@@ -70,6 +72,12 @@
 	rel="stylesheet">
 
 
+<link href="<c:url value="../resources/css/app/jquery-confirm.css" />"
+	rel="stylesheet">
+
+<link href="<c:url value="../resources/css/app/kc.fab.css" />"
+	rel="stylesheet">
+
 </head>
 
 <body class="nav-md">
@@ -80,101 +88,11 @@
 
 
 			<!-- ------------------------------------------ Main naigation bar --------------------------------------------- -->
-
-			<div class="col-md-3 left_col">
-				<div class="left_col scroll-view">
-					<div class="navbar nav_title" style="border: 0;">
-						<a href="index.html" class="site_title"><i
-							class="fa fa-clock-o"></i> <span>Watches World Admin</span></a>
-					</div>
-
-					<div class="clearfix"></div>
-
-					<!-- menu profile quick info -->
-					<div class="profile clearfix">
-						<div class="profile_pic">
-							<img src="${user.photo }"
-								alt="${user.name }&nbsp;${user.surname }"
-								class="img-circle profile_img">
-						</div>
-						<div class="profile_info">
-							<span>Welcome,</span>
-							<h2>${user.name }&nbsp;${user.surname }</h2>
-						</div>
-					</div>
-					<!-- /menu profile quick info -->
-
-					<br />
-
-					<!-- sidebar menu -->
-					<div id="sidebar-menu"
-						class="main_menu_side hidden-print main_menu">
-						<div class="menu_section">
-							<h3>General</h3>
-							<ul class="nav side-menu">
-								<li><a><i class="fa fa-home"></i> Home <span
-										class="fa fa-chevron-down"></span></a>
-									<ul class="nav child_menu">
-										<li><a href="chartjs.html">Current Stock</a></li>
-										<li><a href="chartjs2.html">Watches Sold</a></li>
-									</ul></li>
-								<li><a><i class="fa fa-bar-chart-o"></i> Statistics</a></li>
-								<li><a><i class="fa fa-eur"></i> Investors</a></li>
-								<li><a><i class="fa fa-users"></i> Parties <span
-										class="fa fa-chevron-down"></span></a>
-									<ul class="nav child_menu">
-										<li><a href="tables.html">Suppliers</a></li>
-										<li><a href="tables_dynamic.html">Clients</a></li>
-									</ul></li>
-								<li><a><i class="fa fa-money"></i> Profit</a>
-									<ul class="nav child_menu">
-										<li><a href="chartjs.html">Main Profit</a></li>
-										<li><a href="chartjs2.html">Assets &amp; Depts</a></li>
-										<li><a href="morisjs.html">Sold &amp; Bought</a></li>
-										<li><a href="echarts.html">Banks &amp; Capital</a></li>
-									</ul></li>
-								<li><a><i class="fa fa-file-pdf-o"></i>Reports <span
-										class="fa fa-chevron-down"></span></a>
-									<ul class="nav child_menu">
-										<li><a href="fixed_sidebar.html">Stock</a></li>
-									</ul></li>
-							</ul>
-						</div>
-
-					</div>
-
-				</div>
-			</div>
-
+			<%@ include file="../common/nav.jsp"%>
 			<!-- ------------------------------------------ End Main naigation bar --------------------------------------------- -->
 
 			<!-- ------------------------------------------ End Top naigation bar --------------------------------------------- -->
-
-			<c:url var="logoutUrl" value="/logout" />
-			<div class="top_nav">
-				<div class="nav_menu">
-					<nav>
-						<div class="nav toggle">
-							<a id="menu_toggle"><i class="fa fa-bars"></i></a>
-						</div>
-
-						<ul class="nav navbar-nav navbar-right">
-							<li class=""><a href="javascript:;"
-								class="user-profile dropdown-toggle" data-toggle="dropdown"
-								aria-expanded="false"> <img src="${user.photo }" alt="">${user.name }&nbsp;${user.surname }
-									<span class=" fa fa-angle-down"></span>
-							</a>
-								<ul class="dropdown-menu dropdown-usermenu pull-right">
-									<li><a href="javascript:;"> Profile</a></li>
-									<li><a href="${logoutUrl }"><i
-											class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-								</ul></li>
-
-						</ul>
-					</nav>
-				</div>
-			</div>
-
+			<%@ include file="../common/header.jsp"%>
 			<!-- ------------------------------------------ End Top naigation bar --------------------------------------------- -->
 
 			<!-- ------------------------------------------ Totals Tiles --------------------------------------------- -->
@@ -213,23 +131,135 @@
 				<!-- ------------------------------------------ Products Table --------------------------------------------- -->
 
 				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="col-md-12 col-sm-12 col-xs-12 ">
 
-						<table id="products_table_id"
-							class="table table-striped table-bordered dt-responsive nowrap"
-							cellspacing="0" width="100%">
+						<table id="productsTableId"
+							class="table table-striped table-bordered  row-border order-column"
+							style="width: 100%">
 							<thead>
 								<tr>
 									<th>INTERNAL REFERENCE</th>
 									<th>BRAND</th>
 									<th>MODEL</th>
 									<th>REFERENCE</th>
+									<th>DIAL</th>
 									<th>YEAR</th>
+									<th>CONDITION</th>
+									<th>AVAILABILITY STATUS</th>
+									<th>COST €</th>
+									<th>SELLING PRICE</th>
+									<th>PAYMENT STATUS</th>
+									<th>PROFIT IN €€</th>
+									<th>PROFIT IN %%</th>
+
+									<th>CASE</th>
+									<th>BRACELET</th>
 									<th>SERIAL</th>
+									<th>BOX</th>
+									<th>PAPERS</th>
+									<th>RRP</th>
+									<th>COST £</th>
+									<th>COST $</th>
+									<th>EXTRA COSTS</th>
+									<th>ACTUALLY SOLD</th>
+
+									<th>CURRENT LOCATION</th>
+									<th>COUNTRY BOUGHT FROM</th>
+									<th>SUPPLIER</th>
+									<th>COUNTRY SOLD</th>
+									<th>CLIENT</th>
+									<th>AGE</th>
+									<th>GENDER</th>
+									<th>Edit</th>
+									<th>Delete</th>
 
 								</tr>
+
 							</thead>
+
+							<tbody>
+
+								<c:forEach var="productVar" items="${products}"
+									varStatus="productIndexVar">
+
+
+									<tr>
+										<td>${productVar.productId}</td>
+										<td>${productVar.brand}</td>
+										<td>${productVar.model}</td>
+										<td>${productVar.productReference}</td>
+										<td>${productVar.dial}</td>
+										<td>${productVar.year}</td>
+										<td>${productVar.condition}</td>
+										<c:choose>
+											<c:when
+												test="${productVar.availabilityStatus == true}">
+												<td>AVAILABLE</td>
+											</c:when>
+											<c:otherwise>
+												<td>NOT AVAILABLE</td>
+											</c:otherwise>
+										</c:choose>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].cost}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].sellingPrice}</td>
+										<td>${productVar.paymentStatus}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].profit}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].profitPercentage}</td>
+										<td>${productVar.productCase}</td>
+										<td>${productVar.bracelet}</td>
+										<td>${productVar.serial}</td>
+										<c:choose>
+											<c:when test="${productVar.hasPapers == true}">
+												<td>YES</td>
+											</c:when>
+											<c:otherwise>
+												<td>NO</td>
+											</c:otherwise>
+										</c:choose>
+										<c:choose>
+											<c:when test="${productVar.hasBox == true}">
+												<td>YES</td>
+											</c:when>
+											<c:otherwise>
+												<td>NO</td>
+											</c:otherwise>
+										</c:choose>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].rrp}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[2].cost}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[1].cost}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].extraCost}</td>
+										<td>${productVar.costDetails.costDetailsCurrencies[0].actuallySold}</td>
+										<td>${productVar.currentLocation}</td>
+										<td>${productVar.boughtFromCountry}</td>
+										<td>${productVar.supplierName}</td>
+										<td>${productVar.soldInCountry}</td>
+										<td>${productVar.clientName}</td>
+										<td>${productVar.clientAge}</td>
+										<td>${productVar.clientGender}</td>
+										<td><sec:authorize access="hasAuthority('EDIT_PRODUCT')">
+												<a
+													href="location.href='${pageContext.servletContext.contextPath}/products/editProduct/${productVar.productId}'">
+													<i class="fa fa-edit"
+													style="font-size: 24px; color: #536A7F"></i>
+												</a>
+
+											</sec:authorize></td>
+
+										<td><sec:authorize
+												access="hasAuthority('DELETE_PRODUCT')">
+
+												<a onclick="setProductID(${productVar.productId})"
+													class="deleteProductId"> <i class="fa fa-remove"
+													style="font-size: 24px; color: red; cursor: pointer;"></i>
+												</a>
+
+											</sec:authorize></td>
+									</tr>
+
+								</c:forEach>
+							</tbody>
 						</table>
+
 					</div>
 				</div>
 			</div>
@@ -238,6 +268,14 @@
 		</div>
 
 	</div>
+
+	<input type="hidden" id="productValueID" />
+	<input type="hidden" name="${_csrf.parameterName}"
+		value="${_csrf.token}" />
+
+	<sec:authorize access="hasAuthority('ADD_PRODUCT')">
+		<div class="kc_fab_wrapper"></div>
+	</sec:authorize>
 
 	<!-- jQuery -->
 	<script src="../resources/vendors/jquery/dist/jquery.min.js"></script>
@@ -307,58 +345,97 @@
 	<script src="../resources/vendors/pdfmake/build/pdfmake.min.js"></script>
 	<script src="../resources/vendors/pdfmake/build/vfs_fonts.js"></script>
 
-	<!-- Custom Theme Scripts -->
-	<script src="../resources/js/app/custom.min.js"></script>
-	<script
-		src="../resources/js/datatables/jquery.dataTables.columnFilter.js"></script>
+	<!-- validator -->
+	<script src="../resources/vendors/validator/validator.js"></script>
 
-	<!-- Data tables -->
+
+	<script src="../resources/js/app/kc.fab.min.js"></script>
+
+	<script src="../resources/js/app/jquery-confirm.js"></script>
+
+	<script src="../resources/js/app/jquery-ui.min.js"></script>
 
 	<script type="text/javascript">
+		function setProductID(productId){
+			
+			var productDiv = document.getElementById("productValueID");
+			productDiv.value = productId;
+		}
+</script>
+
+	<script type="text/javascript">
+		$('#productsTableId').DataTable({
+			responsive : {
+				details : {
+					type : 'inline'
+				}
+			}
+
+		});
+	</script>
+
+
+	<script>
 		$(document)
 				.ready(
 						function() {
-							$('#products_table_id')
-									.DataTable(
-											{
-												"processing" : true,
-												"serverSide" : true,
-												"pagingType" : "full_numbers",
-												"lengthMenu" : [ [ 10, 25, 50], [ 10, 25, 50 ] ],
-												
-												"ajax" : {
-													"url" : "${pageContext.servletContext.contextPath}/admin/getProductsTableJSON",
-													"data" : function(data) {
-														//process data before sent to server.
-													}
-												},
-												"columns" : [
-														{
-															"data" : "productId",
-															"name" : "product_id"
-														},
-														{
-															"data" : "brand",
-															"name" : "brand"
-														},
-														{
-															"data" : "model",
-															"name" : "model"
-														},
-														{
-															"data" : "productReference",
-															"name" : "product_reference"
-														}, {
-															"data" : "year",
-															"name" : "year"
-														}, {
-															"data" : "serial",
-															"name" : "serial"
-														} ]
-											});
+							var links = [
 
-							$('#products_table_id').dataTable()
-									.fnSetFilteringEnterPress();
+							{
+								"bgcolor" : "#536A7F",
+								"color" : "#fff",
+								"url" : "${pageContext.servletContext.contextPath}/products/addProduct",
+								"title" : "Add Product",
+								"icon" : "<i class='fa fa-plus'></i>",
+							} ]
+							$('.kc_fab_wrapper').kc_fab(links);
+						})
+	</script>
+
+	<script type="text/javascript">
+		$('.deleteProductId')
+				.on(
+						'click',
+						function() {
+							$
+									.confirm({
+										content : '',
+										title : 'Delete product?',
+										icon : 'fa fa-trash-o',
+										theme : 'modern',
+										closeIcon : true,
+										animation : 'scale',
+										type : 'orange',
+										buttons : {
+											confirm : {
+												text : 'Delete?',
+												btnClass : 'btn-red',
+												action : function() {
+
+													var vehicleDiv = document
+															.getElementById("productValueID");
+													var vehicleId = vehicleDiv.value;
+
+													$
+															.ajax({
+																url : '${pageContext.servletContext.contextPath}/products/deleteProduct/'
+
+																		+ vehicleId,
+																success : function(
+																		response) {
+																	location
+																			.reload();
+																}
+															});
+												}
+
+											},
+											cancel : {
+												text : 'Cancel',
+												btnClass : 'btn-primary',
+											}
+										}
+									});
 						});
 	</script>
 

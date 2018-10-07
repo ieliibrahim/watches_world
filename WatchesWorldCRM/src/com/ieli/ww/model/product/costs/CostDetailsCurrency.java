@@ -6,9 +6,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "cost_details_currency")
@@ -19,13 +24,14 @@ public class CostDetailsCurrency implements Serializable {
 	private Long costDetailsCurrencyId;
 	private Double rrp;
 	private String currency;
+	private Double cost;
 	private Double extraCost;
 	private Double sellingPrice;
 	private Double actuallySold;
 	private Double profit;
 	private Double profitPercentage;
 	private boolean enabled;
-	private Long costDetailsId;
+	private CostDetails costDetails;
 
 	public CostDetailsCurrency() {
 
@@ -42,13 +48,15 @@ public class CostDetailsCurrency implements Serializable {
 		this.costDetailsCurrencyId = costDetailsCurrencyId;
 	}
 
-	@Column(name = "cost_details_id", nullable = false)
-	public Long getCostDetailsId() {
-		return costDetailsId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cost_details_id", nullable = true)
+	@JsonBackReference
+	public CostDetails getCostDetails() {
+		return costDetails;
 	}
 
-	public void setCostDetailsId(Long costDetailsId) {
-		this.costDetailsId = costDetailsId;
+	public void setCostDetails(CostDetails costDetails) {
+		this.costDetails = costDetails;
 	}
 
 	@Column(name = "rrp")
@@ -67,6 +75,15 @@ public class CostDetailsCurrency implements Serializable {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	@Column(name = "cost")
+	public Double getCost() {
+		return cost;
+	}
+
+	public void setCost(Double cost) {
+		this.cost = cost;
 	}
 
 	@Column(name = "extra_cost")

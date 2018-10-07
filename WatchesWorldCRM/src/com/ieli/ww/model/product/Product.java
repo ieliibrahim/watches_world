@@ -6,16 +6,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ieli.ww.model.product.costs.CostDetails;
-import com.ieli.ww.model.product.details.CountryDetails;
-import com.ieli.ww.model.product.details.ProductDetails;
-import com.ieli.ww.model.product.parties.Client;
-import com.ieli.ww.model.product.parties.Supplier;
 
 @Entity
 @Table(name = "products")
@@ -26,21 +24,35 @@ public class Product implements Serializable {
 	private Long productId;
 	private String brand;
 	private String model;
+	private String productReference;
+	private String productCase;
+	private String bracelet;
+	private String dial;
+	private String year;
+	private String condition;
+	private String serial;
+	private Boolean hasBox;
+	private Boolean hasPapers;
+	private String availabilityStatus;
+	private String paymentStatus;
+	private String currentLocation;
+	private String boughtFromCountry;
+	private String supplierName;
+	private String soldInCountry;
+	private String clientName;
+	private Integer clientAge;
+	private String clientGender;
+	private String imagePath;
+
 	private String dateAdded;
 	private String dateModified;
 	private String dateDeleted;
 	private String dateSold;
-	private String productReference;
-	private String year;
-	private String serial;
+	private String month;
+
 	private boolean enabled;
 
-	// Relationships
-	private ProductDetails productDetails;
-	private Client client;
-	private Supplier supplier;
 	private CostDetails costDetails;
-	private CountryDetails countryDetails;
 
 	public Product() {
 
@@ -147,34 +159,8 @@ public class Product implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@Transient
-	public ProductDetails getProductDetails() {
-		return productDetails;
-	}
-
-	public void setProductDetails(ProductDetails productDetails) {
-		this.productDetails = productDetails;
-	}
-
-	@Transient
-	public Client getClient() {
-		return client;
-	}
-
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
-	@Transient
-	public Supplier getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(Supplier supplier) {
-		this.supplier = supplier;
-	}
-
-	@Transient
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
+	@JsonManagedReference
 	public CostDetails getCostDetails() {
 		return costDetails;
 	}
@@ -183,13 +169,157 @@ public class Product implements Serializable {
 		this.costDetails = costDetails;
 	}
 
-	@Transient
-	public CountryDetails getCountryDetails() {
-		return countryDetails;
+	@Column(name = "product_case")
+	public String getProductCase() {
+		return productCase;
 	}
 
-	public void setCountryDetails(CountryDetails countryDetails) {
-		this.countryDetails = countryDetails;
+	public void setProductCase(String productCase) {
+		this.productCase = productCase;
+	}
+
+	@Column(name = "bracelet")
+	public String getBracelet() {
+		return bracelet;
+	}
+
+	public void setBracelet(String bracelet) {
+		this.bracelet = bracelet;
+	}
+
+	@Column(name = "dial")
+	public String getDial() {
+		return dial;
+	}
+
+	public void setDial(String dial) {
+		this.dial = dial;
+	}
+
+	@Column(name = "condition")
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	@Column(name = "has_box")
+	public Boolean getHasBox() {
+		return hasBox;
+	}
+
+	public void setHasBox(Boolean hasBox) {
+		this.hasBox = hasBox;
+	}
+
+	@Column(name = "has_papers")
+	public Boolean getHasPapers() {
+		return hasPapers;
+	}
+
+	public void setHasPapers(Boolean hasPapers) {
+		this.hasPapers = hasPapers;
+	}
+
+	@Column(name = "payment_status")
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	@Column(name = "availability_status")
+	public String getAvailabilityStatus() {
+		return availabilityStatus;
+	}
+
+	public void setAvailabilityStatus(String availabilityStatus) {
+		this.availabilityStatus = availabilityStatus;
+	}
+
+	@Column(name = "current_location")
+	public String getCurrentLocation() {
+		return currentLocation;
+	}
+
+	public void setCurrentLocation(String currentLocation) {
+		this.currentLocation = currentLocation;
+	}
+
+	@Column(name = "bought_from_country")
+	public String getBoughtFromCountry() {
+		return boughtFromCountry;
+	}
+
+	public void setBoughtFromCountry(String boughtFromCountry) {
+		this.boughtFromCountry = boughtFromCountry;
+	}
+
+	@Column(name = "sold_in_country")
+	public String getSoldInCountry() {
+		return soldInCountry;
+	}
+
+	public void setSoldInCountry(String soldInCountry) {
+		this.soldInCountry = soldInCountry;
+	}
+
+	@Column(name = "supplier_name")
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	@Column(name = "client_name")
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	@Column(name = "client_age")
+	public Integer getClientAge() {
+		return clientAge;
+	}
+
+	public void setClientAge(Integer clientAge) {
+		this.clientAge = clientAge;
+	}
+
+	@Column(name = "client_gender")
+	public String getClientGender() {
+		return clientGender;
+	}
+
+	public void setClientGender(String clientGender) {
+		this.clientGender = clientGender;
+	}
+
+	@Column(name = "month")
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	@Column(name = "image_path")
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 }

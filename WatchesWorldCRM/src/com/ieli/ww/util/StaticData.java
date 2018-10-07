@@ -16,4 +16,6 @@ public class StaticData {
 	public static final NumberFormat EURO_NUM_FORMAT = NumberFormat.getCurrencyInstance(new Locale("pt", "PT"));
 
 	public static final NumberFormat POUND_NUM_FORMAT = NumberFormat.getCurrencyInstance(Locale.UK);
+
+	public static final String MYSQL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 }

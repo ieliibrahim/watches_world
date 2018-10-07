@@ -13,6 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -52,6 +53,15 @@ public class HibernateConfiguration {
 		properties.put("hibernate.show_sql", this.environment.getRequiredProperty("hibernate.show_sql"));
 		properties.put("hibernate.format_sql", this.environment.getRequiredProperty("hibernate.format_sql"));
 		return properties;
+	}
+
+	@Bean
+	public LocalSessionFactoryBean sessionFactory() {
+		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+		sessionFactory.setDataSource(dataSource());
+		sessionFactory.setPackagesToScan(new String[] { "com.ieli.ww.model" });
+		sessionFactory.setHibernateProperties(hibernateProperties());
+		return sessionFactory;
 	}
 
 	@Bean

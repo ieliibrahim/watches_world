@@ -7,10 +7,19 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ieli.ww.model.product.Product;
 
 @Entity
 @Table(name = "cost_details")
@@ -22,7 +31,7 @@ public class CostDetails implements Serializable {
 	private String month;
 	private String extraCostDescription;
 	private boolean enabled;
-	private Long productId;
+	private Product product;
 	private List<CostDetailsCurrency> costDetailsCurrencies;
 
 	public CostDetails() {
@@ -67,16 +76,20 @@ public class CostDetails implements Serializable {
 		this.month = month;
 	}
 
-	@Column(name = "product_id", nullable = false)
-	public Long getProductId() {
-		return productId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	@JsonBackReference
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
-	@Transient
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(mappedBy = "costDetails")
+	@JsonBackReference
 	public List<CostDetailsCurrency> getCostDetailsCurrencies() {
 		return costDetailsCurrencies;
 	}

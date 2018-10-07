@@ -3,6 +3,7 @@ package com.ieli.ww.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ieli.ww.repository.user.UserRepository;
+import com.ieli.ww.util.StackTraceHandler;
 
 @Controller
 public class AccessController {
+
+	private static Logger accessLogger = Logger.getLogger(AccessController.class);
 
 	@Autowired
 	UserRepository userRepository;
@@ -37,10 +41,14 @@ public class AccessController {
 	public String loginPage() {
 
 		String goTo = "";
-		if (isCurrentAuthenticationAnonymous()) {
-			goTo = "login";
-		} else {
-			goTo = "redirect:/admin/adminboard";
+		try {
+			if (isCurrentAuthenticationAnonymous()) {
+				goTo = "login";
+			} else {
+				goTo = "redirect:/admin/adminboard";
+			}
+		} catch (Exception e) {
+			accessLogger.error(StackTraceHandler.getErrString(e));
 		}
 
 		return goTo;

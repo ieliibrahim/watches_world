@@ -13,7 +13,7 @@ import com.ieli.ww.model.product.costs.CostDetailsCurrency;
 @Transactional
 public interface CostDetailsCurrencyRepository extends JpaRepository<CostDetailsCurrency, Long> {
 
-	List<CostDetailsCurrency> getCostDetailsCurrencyByCostDetailsIdAndCurrencyAndEnabled(Long costDetailsId,
+	List<CostDetailsCurrency> getCostDetailsCurrencyByCostDetailsAndCurrencyAndEnabled(Long costDetailsId,
 			String currency, Boolean enabled);
 
 }
