@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,8 +29,8 @@ public class Product implements Serializable {
 	private String productCase;
 	private String bracelet;
 	private String dial;
-	private String year;
-	private String condition;
+	private String productYear;
+	private String productCondition;
 	private String serial;
 	private Boolean hasBox;
 	private Boolean hasPapers;
@@ -48,8 +49,9 @@ public class Product implements Serializable {
 	private String dateModified;
 	private String dateDeleted;
 	private String dateSold;
-	private String month;
+	private String productMonth;
 
+	private Boolean isStock;
 	private boolean enabled;
 
 	private CostDetails costDetails;
@@ -132,13 +134,13 @@ public class Product implements Serializable {
 		this.productReference = productReference;
 	}
 
-	@Column(name = "year")
-	public String getYear() {
-		return year;
+	@Column(name = "product_year")
+	public String getProductYear() {
+		return productYear;
 	}
 
-	public void setYear(String year) {
-		this.year = year;
+	public void setProductYear(String productYear) {
+		this.productYear = productYear;
 	}
 
 	@Column(name = "serial")
@@ -159,7 +161,7 @@ public class Product implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
 	@JsonManagedReference
 	public CostDetails getCostDetails() {
 		return costDetails;
@@ -196,13 +198,13 @@ public class Product implements Serializable {
 		this.dial = dial;
 	}
 
-	@Column(name = "condition")
-	public String getCondition() {
-		return condition;
+	@Column(name = "product_condition")
+	public String getProductCondition() {
+		return productCondition;
 	}
 
-	public void setCondition(String condition) {
-		this.condition = condition;
+	public void setProductCondition(String productCondition) {
+		this.productCondition = productCondition;
 	}
 
 	@Column(name = "has_box")
@@ -304,13 +306,13 @@ public class Product implements Serializable {
 		this.clientGender = clientGender;
 	}
 
-	@Column(name = "month")
-	public String getMonth() {
-		return month;
+	@Column(name = "product_month")
+	public String getProductMonth() {
+		return productMonth;
 	}
 
-	public void setMonth(String month) {
-		this.month = month;
+	public void setProductMonth(String productMonth) {
+		this.productMonth = productMonth;
 	}
 
 	@Column(name = "image_path")
@@ -320,6 +322,15 @@ public class Product implements Serializable {
 
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	@Column(name = "is_stock")
+	public Boolean getIsStock() {
+		return isStock;
+	}
+
+	public void setIsStock(Boolean isStock) {
+		this.isStock = isStock;
 	}
 
 }

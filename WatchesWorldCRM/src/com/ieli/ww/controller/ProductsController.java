@@ -2,6 +2,7 @@ package com.ieli.ww.controller;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,15 +49,15 @@ public class ProductsController {
 			List<CostDetailsCurrency> costDetailsCurrencies = new ArrayList<CostDetailsCurrency>();
 
 			CostDetailsCurrency costDetailsCurrencyEuro = new CostDetailsCurrency();
-			costDetailsCurrencyEuro.setCost(new Double(0.0));
+			costDetailsCurrencyEuro.setCost("0.0");
 			costDetailsCurrencies.add(costDetailsCurrencyEuro);
 
 			CostDetailsCurrency costDetailsCurrencyPound = new CostDetailsCurrency();
-			costDetailsCurrencyPound.setCost(new Double(0.0));
+			costDetailsCurrencyPound.setCost("0.0");
 			costDetailsCurrencies.add(costDetailsCurrencyPound);
 
 			CostDetailsCurrency costDetailsCurrencyUSD = new CostDetailsCurrency();
-			costDetailsCurrencyUSD.setCost(new Double(0.0));
+			costDetailsCurrencyUSD.setCost("0.0");
 			costDetailsCurrencies.add(costDetailsCurrencyUSD);
 
 			costDetails.setCostDetailsCurrencies(costDetailsCurrencies);
@@ -76,30 +77,76 @@ public class ProductsController {
 		String month = StaticData.FULL_MONTH_NAME;
 
 		product.setEnabled(true);
-		product.setMonth(month);
-
-		if (product.getCostDetails() != null) {
-
-			product.getCostDetails().setEnabled(true);
-			product.getCostDetails().setMonth(month);
-			
-			List<CostDetailsCurrency> costDetailsCurrencies = product.getCostDetails().getCostDetailsCurrencies();
-			costDetailsCurrencies.get(0).setCurrency("Euro");
-			costDetailsCurrencies.get(0).setEnabled(true);
-			
-			costDetailsCurrencies.get(1).setCurrency("Pound");
-			costDetailsCurrencies.get(1).setEnabled(true);
-			
-			costDetailsCurrencies.get(2).setCurrency("USD");
-			costDetailsCurrencies.get(2).setEnabled(true);
-		}
+		product.setProductMonth(month);
 
 		String dateAddedModified = DateUtil.getMySQLDate();
 		product.setDateAdded(dateAddedModified);
 		product.setDateModified(dateAddedModified);
 		product.setDateSold(dateAddedModified);
 
-		Product dbProduct = productRepository.save(product);
+		if (product.getHasBox() == null) {
+			product.setHasBox(false);
+		}
+
+		if (product.getHasPapers() == null) {
+			product.setHasPapers(false);
+		}
+
+		if (product.getIsStock() == null) {
+			product.setIsStock(false);
+		}
+
+		if (product.getCostDetails() != null) {
+
+			product.getCostDetails().setEnabled(true);
+			product.getCostDetails().setProductMonth(month);
+
+			List<CostDetailsCurrency> costDetailsCurrencies = product.getCostDetails().getCostDetailsCurrencies();
+			costDetailsCurrencies.get(0).setCurrency("Euro");
+			costDetailsCurrencies.get(0).setEnabled(true);
+
+			String ratePound = product.getCostDetails().getRatePound();
+
+			costDetailsCurrencies.get(1).setCurrency("Pound");
+			costDetailsCurrencies.get(1).setEnabled(true);
+			costDetailsCurrencies.get(1).setRrp(multiPly(costDetailsCurrencies.get(0).getRrp(), ratePound, "Pound"));
+			costDetailsCurrencies.get(1).setCost(multiPly(costDetailsCurrencies.get(0).getCost(), ratePound, "Pound"));
+			costDetailsCurrencies.get(1)
+					.setExtraCost(multiPly(costDetailsCurrencies.get(0).getExtraCost(), ratePound, "Pound"));
+			costDetailsCurrencies.get(1)
+					.setSellingPrice(multiPly(costDetailsCurrencies.get(0).getSellingPrice(), ratePound, "Pound"));
+			costDetailsCurrencies.get(1)
+					.setActuallySold(multiPly(costDetailsCurrencies.get(0).getActuallySold(), ratePound, "Pound"));
+			costDetailsCurrencies.get(1)
+					.setProfit(multiPly(costDetailsCurrencies.get(0).getProfit(), ratePound, "Pound"));
+			costDetailsCurrencies.get(1).setProfitPercentage(
+					multiPly(costDetailsCurrencies.get(0).getProfitPercentage(), ratePound, "Pound"));
+
+			String rateUSD = product.getCostDetails().getRateUSD();
+
+			costDetailsCurrencies.get(2).setCurrency("USD");
+			costDetailsCurrencies.get(2).setEnabled(true);
+			costDetailsCurrencies.get(2).setRrp(multiPly(costDetailsCurrencies.get(0).getRrp(), rateUSD, "USD"));
+			costDetailsCurrencies.get(2).setCost(multiPly(costDetailsCurrencies.get(0).getCost(), rateUSD, "USD"));
+			costDetailsCurrencies.get(2)
+					.setExtraCost(multiPly(costDetailsCurrencies.get(0).getExtraCost(), rateUSD, "USD"));
+			costDetailsCurrencies.get(2)
+					.setSellingPrice(multiPly(costDetailsCurrencies.get(0).getSellingPrice(), rateUSD, "USD"));
+			costDetailsCurrencies.get(2)
+					.setActuallySold(multiPly(costDetailsCurrencies.get(0).getActuallySold(), rateUSD, "USD"));
+			costDetailsCurrencies.get(2).setProfit(multiPly(costDetailsCurrencies.get(0).getProfit(), rateUSD, "USD"));
+			costDetailsCurrencies.get(2)
+					.setProfitPercentage(multiPly(costDetailsCurrencies.get(0).getProfitPercentage(), rateUSD, "USD"));
+
+			product.getCostDetails().getCostDetailsCurrencies().get(0).setCostDetails(product.getCostDetails());
+			product.getCostDetails().getCostDetailsCurrencies().get(1).setCostDetails(product.getCostDetails());
+			product.getCostDetails().getCostDetailsCurrencies().get(2).setCostDetails(product.getCostDetails());
+
+			product.getCostDetails().setProduct(product);
+
+		}
+
+		Product dbProduct = productRepository.saveAndFlush(product);
 
 		if (image != null) {
 			try {
@@ -129,6 +176,25 @@ public class ProductsController {
 		}
 
 		return "redirect:/admin/adminboard";
+	}
+
+	private String multiPly(String num1, String num2, String curr) {
+
+		String res = "";
+
+		Double bdNum1 = Double.valueOf(num1.replaceAll(",", "."));
+
+		Double bdNum2 = Double.valueOf(num2);
+
+		if (curr.equals("Euro")) {
+			res = StaticData.EURO_NUM_FORMAT.format(bdNum1 * bdNum2);
+		} else if (curr.equals("USD")) {
+			res = StaticData.USD_NUM_FORMAT.format(bdNum1 * bdNum2);
+		} else if (curr.equals("Pound")) {
+			res = StaticData.POUND_NUM_FORMAT.format(bdNum1 * bdNum2);
+		}
+
+		return res;
 	}
 
 	private String getPrincipal() {

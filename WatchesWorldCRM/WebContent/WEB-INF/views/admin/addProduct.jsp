@@ -126,11 +126,21 @@
 
 					<div class="item form-group">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
+							for="isStock">On = Stock, Off = Sold </label>
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<input onclick="setForStock();" type="checkbox" id="isStockId"
+								name="isStock" class="js-switch" />
+						</div>
+					</div>
+
+
+					<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="brand">Brand<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input type="text" id="brand" name="brand" required="required"
-								class="form-control col-md-7 col-xs-12">
+								class="form-control col-md-7 col-xs-12" autofocus="autofocus">
 						</div>
 					</div>
 
@@ -170,8 +180,8 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="yearId" name="year" required="required"
-								class="form-control col-md-7 col-xs-12"
+							<input type="text" id="yearId" name="productYear"
+								required="required" class="form-control col-md-7 col-xs-12"
 								data-inputmask="'mask' : '9999'">
 						</div>
 					</div>
@@ -182,7 +192,7 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="conditionId" name="condition"
+							<input type="text" id="conditionId" name="productCondition"
 								required="required" class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
@@ -206,8 +216,8 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="costId"
-								data-inputmask="'mask' : '99,999,99'" required="required"
+							<input type="text" id="costId" required="required"
+								name="costDetails.costDetailsCurrencies[0].cost"
 								class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
@@ -218,13 +228,13 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="sellingPriceId"
-								data-inputmask="'mask' : '99,999,99'" required="required"
+							<input type="text" id="sellingPriceId" required="required"
+								name="costDetails.costDetailsCurrencies[0].sellingPrice"
 								class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="paymentStatusDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="paymentStatus">Payment Status<span class="required">*</span>
 						</label>
@@ -235,7 +245,7 @@
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="profitDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="profit">Profit €€<span class="required">*</span>
 						</label>
@@ -247,7 +257,7 @@
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="profitPercentageDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="profitPercentage">Profit %%<span class="required">*</span>
 						</label>
@@ -321,8 +331,9 @@
 							class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<input type="text" id="rrp" data-inputmask="'mask' : '99,999,99'"
-								required="required" class="form-control col-md-7 col-xs-12">
+							<input type="text" id="rrp" required="required"
+								name="costDetails.costDetailsCurrencies[0].rrp"
+								class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
 
@@ -332,8 +343,8 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="costPoundId"
-								data-inputmask="'mask' : '99,999,99'" required="required"
+							<input type="text" id="costPoundId" required="required"
+								name="costDetails.costDetailsCurrencies[1].cost"
 								class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
@@ -344,8 +355,8 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="costUSDId"
-								data-inputmask="'mask' : '99,999,99'" required="required"
+							<input type="text" id="costUSDId" required="required"
+								name="costDetails.costDetailsCurrencies[2].cost"
 								class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
@@ -356,20 +367,20 @@
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="extraCost"
+							<input type="text" id="extraCostId"
 								name="costDetails.costDetailsCurrencies[0].extraCost"
 								required="required" class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="actuallySoldDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="actuallySold">Actually Sold<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
-							<input type="text" id="actuallySold"
-								data-inputmask="'mask' : '99,999,99'" required="required"
+							<input type="text" id="actuallySold" required="required"
+								name="costDetails.costDetailsCurrencies[0].actuallySold"
 								class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
@@ -393,7 +404,7 @@
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="countryBoughtFromDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="boughtFromCountry">Country Bought From<span
 							class="required">*</span>
@@ -418,7 +429,7 @@
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="soldInCountryDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="soldInCountry">Country Sold<span class="required">*</span>
 						</label>
@@ -429,7 +440,7 @@
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="clientNameDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="clientName">Client<span class="required">*</span>
 						</label>
@@ -440,7 +451,7 @@
 						</div>
 					</div>
 
-					<div class="item form-group">
+					<div class="item form-group" id="clientAgeDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="clientAge">Age<span class="required">*</span>
 						</label>
@@ -448,21 +459,22 @@
 
 							<input type="text" id="clientAgeId"
 								data-inputmask="'mask' : '99'" required="required"
-								class="form-control col-md-7 col-xs-12">
+								name="clientAge" class="form-control col-md-7 col-xs-12">
 						</div>
 					</div>
 
 
-					<div class="item form-group">
+					<div class="item form-group" id="clientGenderDivId">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
-							for="clientAge">Gender<span class="required">*</span>
+							for="clientGender">Gender<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 
 							<p>
-								M: <input type="radio" class="flat" name="gender" id="genderM"
-									value="M" checked="" required /> F: <input type="radio"
-									class="flat" name="gender" id="genderF" value="F" />
+								M: <input type="radio" class="flat" name="clientGender"
+									id="genderM" value="Male" checked="checked" required /> F: <input
+									type="radio" class="flat" name="clientGender" id="genderF"
+									value="Female" />
 							</p>
 
 						</div>
@@ -470,8 +482,7 @@
 
 					<div class="item form-group">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
-							for="clientAge">Picture<span class="required">*</span>
-						</label>
+							for="imagePath">Picture </label>
 						<div class="card-body">
 							<label class="custom-file-upload"> <input
 								class="btn btn-primary btn-round" type="file" name="file" />
@@ -491,22 +502,9 @@
 							<button id="send" type="submit" class="btn btn-success">Submit</button>
 						</div>
 					</div>
-
-
-					<input type="text" id="ageMaskValueId" name="clientAge" />
-					<input type="text" id="costEuroMaskValueId"
-						name="costDetails.costDetailsCurrencies[0].cost" />
-					<input type="text" id="sellingPriceMaskValueId"
-						name="costDetails.costDetailsCurrencies[0].sellingPrice" />
-					<input type="text" id="actuallySoldMaskValueId"
-						name="costDetails.costDetailsCurrencies[0].actuallySold" />
-					<input type="text" id="rrpMaskValueId"
-						name="costDetails.costDetailsCurrencies[0].rrp" />
-					<input type="text" id="costPoundMaskValueId"
-						name="costDetails.costDetailsCurrencies[1].cost" />
-					<input type="text" id="costUSDMaskValueId"
-						name="costDetails.costDetailsCurrencies[2].cost" />
-
+					<input type="text" id="ratePoundValueId"
+						name="costDetails.ratePound" />
+					<input type="text" id="rateUSDValueId" name="costDetails.rateUSD" />
 				</form:form>
 			</div>
 			<!-- ------------------------------------------ End Form --------------------------------------------- -->
@@ -641,23 +639,12 @@
 			var costUSDMaskValueId = parseFloat($('#costUSDId').val().replace(
 					/,/g, ''));
 
-			$("#costEuroMaskValueId").val(costEuroMaskValueId);
-			$("#sellingPriceMaskValueId").val(sellingPriceMaskValueId);
-			$("#actuallySoldMaskValueId").val(actuallySoldMaskValueId);
-			$("#rrpMaskValueId").val(rrpMaskValueId);
+			var extraCostMaskValueId = parseFloat($('#extraCostId').val()
+					.replace(/,/g, ''));
 
 			$('#profit').val(profit);
 			$('#profitPercentage').val(Math.floor(percProfit));
 		}
-
-		$(function() {
-
-			$(document).on("keypress", "#clientAgeId", function() {
-				var ageMaskValueId = $('#clientAgeId').val();
-				$("#ageMaskValueId").val(ageMaskValueId);
-			});
-
-		});
 
 		$("#costId").focusout(function() {
 			echangeForPound();
@@ -685,7 +672,7 @@
 									.replace(/,/g, ''));
 
 							var finalValue = costInEuro * rate;
-							$("#costPoundMaskValueId").val(finalValue);
+							$("#ratePoundValueId").val(rate);
 							$("#costPoundId").val(finalValue);
 						},
 						error : function(xhr) {
@@ -714,7 +701,7 @@
 
 							var costInEuro = parseFloat($('#costId').val()
 									.replace(/,/g, ''));
-
+							$("#rateUSDValueId").val(rate);
 							var finalValue = costInEuro * rate;
 							$("#costUSDId").val(finalValue);
 							$("#costUSDMaskValueId").val(finalValue);
@@ -725,6 +712,73 @@
 					});
 
 		}
+	</script>
+
+	<script type="text/javascript">
+		var changeCheckbox = document.querySelector('#isStockId');
+
+		changeCheckbox.onchange = function() {
+
+			if (changeCheckbox.checked) {
+				$("#paymentStatusDivId").hide();
+				$("#profitDivId").hide();
+				$("#profitPercentageDivId").hide();
+				$("#actuallySoldDivId").hide();
+				$("#countryBoughtFromDivId").hide();
+				$("#soldInCountryDivId").hide();
+				$("#clientNameDivId").hide();
+				$("#clientAgeDivId").hide();
+
+				$("#paymentStatus").prop('required', false);
+				$("#profit").prop('required', false);
+				$("#profitPercentage").prop('required', false);
+				$("#actuallySold").prop('required', false);
+				$("#countryBoughtFromId").prop('required', false);
+				$("#countrySoldInId").prop('required', false);
+				$("#clientNameId").prop('required', false);
+				$("#clientAgeId").prop('required', false);
+
+			} else {
+				$("#paymentStatus").prop('required', 'required');
+				$("#profit").prop('required', 'required');
+				$("#profitPercentage").prop('required', 'required');
+				$("#actuallySold").prop('required', 'required');
+				$("#countryBoughtFromId").prop('required', 'required');
+				$("#countrySoldInId").prop('required', 'required');
+				$("#clientNameId").prop('required', 'required');
+				$("#clientAgeId").prop('required', 'required');
+
+				$("#paymentStatusDivId").show();
+				$("#profitDivId").show();
+				$("#profitPercentageDivId").show();
+				$("#actuallySoldDivId").show();
+				$("#countryBoughtFromDivId").show();
+				$("#soldInCountryDivId").show();
+				$("#clientNameDivId").show();
+				$("#clientAgeDivId").show();
+
+			}
+
+		};
+	</script>
+
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$(
+									"#costId,#costPoundId,#sellingPriceId,#rrp,#costUSDId,#extraCostId,#actuallySold")
+									.inputmask("numeric", {
+										radixPoint : ".",
+										groupSeparator : ",",
+										digits : 2,
+										autoGroup : true,
+										rightAlign : false,
+										oncleared : function() {
+											self.Value('');
+										}
+									});
+						});
 	</script>
 </body>
 </html>

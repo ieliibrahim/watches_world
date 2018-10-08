@@ -22,14 +22,14 @@ public class CostDetailsCurrency implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long costDetailsCurrencyId;
-	private Double rrp;
+	private String rrp;
 	private String currency;
-	private Double cost;
-	private Double extraCost;
-	private Double sellingPrice;
-	private Double actuallySold;
-	private Double profit;
-	private Double profitPercentage;
+	private String cost;
+	private String extraCost;
+	private String sellingPrice;
+	private String actuallySold;
+	private String profit;
+	private String profitPercentage;
 	private boolean enabled;
 	private CostDetails costDetails;
 
@@ -49,7 +49,7 @@ public class CostDetailsCurrency implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cost_details_id", nullable = true)
+	@JoinColumn(name = "cost_details_id", nullable = false)
 	@JsonBackReference
 	public CostDetails getCostDetails() {
 		return costDetails;
@@ -60,11 +60,11 @@ public class CostDetailsCurrency implements Serializable {
 	}
 
 	@Column(name = "rrp")
-	public Double getRrp() {
+	public String getRrp() {
 		return rrp;
 	}
 
-	public void setRrp(Double rrp) {
+	public void setRrp(String rrp) {
 		this.rrp = rrp;
 	}
 
@@ -78,56 +78,56 @@ public class CostDetailsCurrency implements Serializable {
 	}
 
 	@Column(name = "cost")
-	public Double getCost() {
+	public String getCost() {
 		return cost;
 	}
 
-	public void setCost(Double cost) {
+	public void setCost(String cost) {
 		this.cost = cost;
 	}
 
 	@Column(name = "extra_cost")
-	public Double getExtraCost() {
+	public String getExtraCost() {
 		return extraCost;
 	}
 
-	public void setExtraCost(Double extraCost) {
+	public void setExtraCost(String extraCost) {
 		this.extraCost = extraCost;
 	}
 
 	@Column(name = "selling_price")
-	public Double getSellingPrice() {
+	public String getSellingPrice() {
 		return sellingPrice;
 	}
 
-	public void setSellingPrice(Double sellingPrice) {
+	public void setSellingPrice(String sellingPrice) {
 		this.sellingPrice = sellingPrice;
 	}
 
 	@Column(name = "actually_sold")
-	public Double getActuallySold() {
+	public String getActuallySold() {
 		return actuallySold;
 	}
 
-	public void setActuallySold(Double actuallySold) {
+	public void setActuallySold(String actuallySold) {
 		this.actuallySold = actuallySold;
 	}
 
 	@Column(name = "profit")
-	public Double getProfit() {
+	public String getProfit() {
 		return profit;
 	}
 
-	public void setProfit(Double profit) {
+	public void setProfit(String profit) {
 		this.profit = profit;
 	}
 
 	@Column(name = "profit_percentage")
-	public Double getProfitPercentage() {
+	public String getProfitPercentage() {
 		return profitPercentage;
 	}
 
-	public void setProfitPercentage(Double profitPercentage) {
+	public void setProfitPercentage(String profitPercentage) {
 		this.profitPercentage = profitPercentage;
 	}
 

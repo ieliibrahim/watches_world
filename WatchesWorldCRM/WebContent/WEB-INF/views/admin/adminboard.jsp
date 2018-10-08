@@ -189,11 +189,10 @@
 										<td>${productVar.model}</td>
 										<td>${productVar.productReference}</td>
 										<td>${productVar.dial}</td>
-										<td>${productVar.year}</td>
-										<td>${productVar.condition}</td>
+										<td>${productVar.productYear}</td>
+										<td>${productVar.productCondition}</td>
 										<c:choose>
-											<c:when
-												test="${productVar.availabilityStatus == true}">
+											<c:when test="${productVar.availabilityStatus == true}">
 												<td>AVAILABLE</td>
 											</c:when>
 											<c:otherwise>
@@ -274,7 +273,7 @@
 		value="${_csrf.token}" />
 
 	<sec:authorize access="hasAuthority('ADD_PRODUCT')">
-		<div class="kc_fab_wrapper"></div>
+		<div class="kc_fab_wrapper" style="margin-bottom: 20px;"></div>
 	</sec:authorize>
 
 	<!-- jQuery -->
@@ -367,10 +366,13 @@
 		$('#productsTableId').DataTable({
 			responsive : {
 				details : {
-					type : 'inline'
+					type : 'inline',
+					renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+		                tableClass: 'ui table'
+		            } )
+		            //, render: $.fn.dataTable.render.number( ',', '.', 2 )
 				}
 			}
-
 		});
 	</script>
 

@@ -31,7 +31,7 @@ public class MainBoardController {
 
 		String month = StaticData.FULL_MONTH_NAME;
 
-		Page<Product> products = productRepository.findAllByEnabled(true, new PageRequest(0, 10));
+		Page<Product> products = productRepository.findAllByEnabled(true, new PageRequest(0, 100));
 
 		setupSold(model, month);
 
@@ -46,13 +46,15 @@ public class MainBoardController {
 	private void setupSold(Model model, String month) {
 		Long totalRecords = productRepository.countByEnabled(true);
 
-		Long soldFemaleCount = productRepository.countByClientGenderAndMonthAndEnabled("Female", month, true);
+		Long soldFemaleCount = productRepository.countByClientGenderAndProductMonthAndIsStockAndEnabled("Female", month,
+				false, true);
 		Long soldPercFemale = ((soldFemaleCount * 100) / totalRecords);
 
 		model.addAttribute("soldFemale", soldFemaleCount);
 		model.addAttribute("soldFemalePerc", soldPercFemale);
 
-		Long soldMaleCount = productRepository.countByClientGenderAndMonthAndEnabled("Male", month, true);
+		Long soldMaleCount = productRepository.countByClientGenderAndProductMonthAndIsStockAndEnabled("Male", month,
+				false, true);
 		Long soldPercMale = ((soldMaleCount * 100) / totalRecords);
 
 		model.addAttribute("soldMale", soldMaleCount);

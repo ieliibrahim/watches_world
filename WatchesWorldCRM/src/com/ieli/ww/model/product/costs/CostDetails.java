@@ -5,18 +5,16 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ieli.ww.model.product.Product;
@@ -28,10 +26,12 @@ public class CostDetails implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long costDetailsId;
-	private String month;
+	private String productMonth;
 	private String extraCostDescription;
 	private boolean enabled;
 	private Product product;
+	private String ratePound;
+	private String rateUSD;
 	private List<CostDetailsCurrency> costDetailsCurrencies;
 
 	public CostDetails() {
@@ -67,17 +67,17 @@ public class CostDetails implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@Column(name = "month")
-	public String getMonth() {
-		return month;
+	@Column(name = "product_month")
+	public String getProductMonth() {
+		return productMonth;
 	}
 
-	public void setMonth(String month) {
-		this.month = month;
+	public void setProductMonth(String productMonth) {
+		this.productMonth = productMonth;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "product_id", nullable = false)
 	@JsonBackReference
 	public Product getProduct() {
 		return product;
@@ -87,8 +87,7 @@ public class CostDetails implements Serializable {
 		this.product = product;
 	}
 
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "costDetails")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "costDetails")
 	@JsonBackReference
 	public List<CostDetailsCurrency> getCostDetailsCurrencies() {
 		return costDetailsCurrencies;
@@ -96,6 +95,24 @@ public class CostDetails implements Serializable {
 
 	public void setCostDetailsCurrencies(List<CostDetailsCurrency> costDetailsCurrencies) {
 		this.costDetailsCurrencies = costDetailsCurrencies;
+	}
+
+	@Column(name = "rate_pound")
+	public String getRatePound() {
+		return ratePound;
+	}
+
+	public void setRatePound(String ratePound) {
+		this.ratePound = ratePound;
+	}
+
+	@Column(name = "rate_usd")
+	public String getRateUSD() {
+		return rateUSD;
+	}
+
+	public void setRateUSD(String rateUSD) {
+		this.rateUSD = rateUSD;
 	}
 
 }

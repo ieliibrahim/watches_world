@@ -13,6 +13,7 @@ import com.ieli.ww.model.product.costs.CostDetails;
 @Transactional
 public interface CostDetailsRepository extends JpaRepository<CostDetails, Long> {
 
-	List<CostDetails> getCostDetailsByMonthAndEnabled(String month, Boolean enabled);
+	List<CostDetails> getCostDetailsByProductMonthAndProductIsStockAndEnabled(String month, boolean isStock,
+			boolean enabled);
 
 }

@@ -17,5 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Long countByEnabled(boolean enabled);
 
-	Long countByClientGenderAndMonthAndEnabled(String string, String month, boolean enabled);
+	Long countByClientGenderAndProductMonthAndIsStockAndEnabled(String string, String month, boolean isStock,
+			boolean enabled);
 }
